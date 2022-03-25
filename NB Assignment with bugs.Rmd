@@ -39,16 +39,16 @@ The fakenews dataset was chosen for this assignment. I will build a model in ord
 
 ## Data Understanding
 ```{r}
-url <- "https://raw.githubusercontent.com/HAN-M3DM-Data-Mining/data-mining-s2y2122-EilisLerpetre/master/datasets/NB-fakenews.csv"
+url <- "https://raw.githubusercontent.com/HAN-M3DM-Data-Mining/data-mining-s2y2122-naana777/master/datasets/NB-fakenews.csv"
 RawData <- read.csv(url)
 ```
 
 ## Data Preparation
 ```{r}
 #Clean the data. 
-RawData <- RawData[-1]
-RawData <- RawData[-1]
-RawData <- RawData[-1]
+RawData <- RawData[-2]
+RawData <- RawData[-2]
+RawData <- RawData[-2]
 ```
 
 ```{r}
@@ -61,7 +61,7 @@ class(RawData$label)
 
 ```{r}
 #Filter them.
-Real <- RawData %>% filter(label == "Real")
+Real <- RawData %>% filter(label == "fake")
 Fake <- RawData %>% filter(label == "Fake")
 ```
 
@@ -112,7 +112,7 @@ head(trainDTM[,1:10])
 
 ## Modeling, Evaluation
 ```{r}
-nbayesModel <- naiveBayes(trainDTM,trainDataFrame$label,laplace = 1) 
+nbayesm <- naiveBayes(trainDTM,trainDataFrame$label,laplace = 1) 
 predVec <- predict(nbayesModel,testDTM) 
 confusionMatrix(predVec,testDataFrame$label,positive = "Fake",dnn = c("Prediction","True")) 
 ```
