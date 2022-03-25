@@ -1,0 +1,120 @@
+---
+title: "Assigment - Naive Bayes DIY"
+author:
+  - Naana - Author
+  - name reviewer here - Reviewer
+date: March 24, 2022
+output:
+   html_notebook:
+    toc: true
+    toc_depth: 2
+---
+
+```{r}
+#Install the packages. 
+install.packages("tidyverse")
+install.packages("tm")
+install.packages("caret")
+install.packages("wordcloud")
+install.packages("e1071")
+install.packages("dplyr")
+```
+
+```{r}
+library(tidyverse)
+library(tm)
+library(caret)
+library(wordcloud)
+library(e1071)
+library(dplyr)
+```
+---
+
+Choose a suitable dataset from [this](https://github.com/HAN-M3DM-Data-Mining/assignments/tree/master/datasets) folder and train your own Naive Bayes model. Follow all the steps from the CRISP-DM model.
+
+
+## Business Understanding
+The fakenews dataset was chosen for this assignment. I will build a model in order to determine and predict if it is fake or real. 
+
+
+## Data Understanding
+```{r}
+url <- "https://raw.githubusercontent.com/HAN-M3DM-Data-Mining/data-mining-s2y2122-naana777/master/datasets/NB-fakenews.csv"
+RawData <- read.csv(url)
+```
+
+## Data Preparation
+```{r}
+#Clean the data. 
+RawData <- RawData[-2]
+RawData <- RawData[-2]
+RawData <- RawData[-2]
+```
+
+```{r}
+#Label the codes.
+RawData <- mutate(RawData,label = recode(label,"0" = "True","1" = "Fake"))
+
+RawData$label <- RawData$label %>%  factor %>% relevel("Fake")
+class(RawData$label)
+```
+
+```{r}
+#Filter them.
+Real <- RawData %>% filter(label == "fake")
+Fake <- RawData %>% filter(label == "Fake")
+```
+
+```{r}
+#Adding the text size and colors.
+wordcloud(Fake$text,max.words = 25, scale = c(4,0.8), colors = c("Tomato1","Tomato2","Tomato3","Tomato")) 
+wordcloud(Real$text,max.words = 25, scale = c(4,0.8),colors = c("Turquoise1","Turquoise2","Turquoise3","Turquoise")) 
+```
+
+```{r}
+#Insepction.
+rawCorpus <- Corpus(VectorSource(RawData$text)) 
+inspect(rawCorpus[1:3]) 
+```
+
+```{r}
+trainIndex <- createDataPartition(RawData$label,p = .75,list = FALSE,times = 1)
+trainDataFrame <- RawData[trainIndex,] 
+```
+
+```{r}
+cleanDTM <- rawCorpus %>% DocumentTermMatrix()
+inspect(cleanDTM)
+```
+
+```{r}
+trainCorpus <- cleanCorpus[trainIndex]
+testCorpus <- cleanCorpus[-trainIndex]
+trainDTM <- cleanDTM2[trainIndex, ]
+testDTM <- cleanDTM2[-trainIndex, ]
+```
+
+```{r}
+freqWords <- cleanDTM %>% findFreqTerms(10)
+cleanDTM2 <- DocumentTermMatrix(cleanCorpus, list(dictionary = freqWords))
+trainDTM <- DocumentTermMatrix(trainCorpus,list(dictionary = freqWords)) 
+
+```
+
+```{r}
+convert_counts <- function(x) {
+  x <- ifelse(x > 0, 1, 0) %>% factor(levels = c(0,1), labels = c("no", "yes"))}
+nColsDTM <- dim(trainDTM)[2]
+trainDTM <- apply(trainDTM, MARGIN = 2, convert_counts)
+testDTM <- apply(testDTM, MARGIN = 2, convert_counts)
+head(trainDTM[,1:10]) 
+```
+
+## Modeling, Evaluation
+```{r}
+nbayesm <- naiveBayes(trainDTM,trainDataFrame$label,laplace = 1) 
+predVec <- predict(nbayesModel,testDTM) 
+confusionMatrix(predVec,testDataFrame$label,positive = "Fake",dnn = c("Prediction","True")) 
+```
+
+reviewer adds suggestions for improving the model
