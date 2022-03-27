@@ -1,0 +1,49 @@
+
+```{r}
+main_data <- read_excel("HAN_Math & Stats Refresher-Final Assignment.xlsx", range = "B11:H22")
+View(main_data)
+
+histogram_absolute <- read_excel("HAN_Math & Stats Refresher-Final Assignment.xlsx", range = "T11:V22")
+View(histogram_absolute)
+
+histogram_percentage <- read_excel("HAN_Math & Stats Refresher-Final Assignment.xlsx", range = "X11:Z22")
+View(histogram_percentage)
+```
+
+```{r}
+ggplot((histogram_absolute), aes(x=Bin))  +
+  
+  geom_bar( aes(y=Frequency), stat="identity", size=.1,  color="dark grey", alpha=1, width = 0.2) + 
+  
+  geom_line( aes(y=Cumulative/5.5), size=2, color="orange") +
+  scale_x_continuous(breaks=c(seq(+0,+10,1)))+
+  scale_y_continuous(breaks=c(seq(+0,+14,2)),
+    name = "Frequency",
+    sec.axis = sec_axis(~.*5.5, name="Cumulative")
+  ) + 
+  
+  ggtitle("Overall Distribution of Marks")
+
+```
+```{r}
+v <- c(6.380276, 7.525860, 5.080660, 9.6938259, 7.169607, 8.267766)
+mean(v)
+var(v)
+```
+```{r}
+v2 <- c(6.018627, 8.641753, 6.922885, 0.8211942, 5.259249, 9.548955)
+mean(v2)
+var(v2)
+```
+```{r}
+x <- c(6.380276, 6.018627, 9.739016, 9.959391, 5.126124, 9.512828, 5.378355, 3.284256, 5.672010, 8.481984, 3.528282)
+mean(x)
+var(x)
+```
+
+```{r}
+x2 <- c(7.525860, 8.641753, 7.614935, 9.939919, 9.750846, 7.799540, 6.397815, 6.431212, 6.329852, 7.457434, 9.131233)
+mean(x2)
+var(x2)
+```
+
